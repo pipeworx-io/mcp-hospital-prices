@@ -2,11 +2,11 @@
 
 What US hospitals say a service costs: gross charge, self-pay cash price and payer-negotiated rates for a CPT/HCPCS or MS-DRG code at hospitals near a ZIP, from the standard charges files hospitals publish under the CMS hospital price transparency rule.
 
-Part of [Pipeworx](https://pipeworx.io) — an MCP gateway connecting AI agents to 1856+ live data sources. This is an independent, unofficial integration — not affiliated with, endorsed by, or published by the upstream provider.
+Part of [Pipeworx](https://pipeworx.io) — an MCP gateway connecting AI agents to 1858+ live data sources. This is an independent, unofficial integration — not affiliated with, endorsed by, or published by the upstream provider.
 
 ## Tools
 
-- `hospital_price_search(code, near, radius_mi?, payer?, plan?, setting?, limit?)` — hospitals within a radius of a ZIP (or `lat,lon`), nearest first, each with gross charge, discounted cash price, de-identified min/max negotiated amounts and a summary of payer rates. With `payer`/`plan` it returns that payer's negotiated rate rows.
+- `hospital_price_search(code, near, radius_mi?, payer?, plan?, setting?, limit?)` — hospitals within a radius of a ZIP (or `lat,lon`), nearest first, each with gross charge, discounted cash price, de-identified min/max negotiated amounts and a summary of payer rates. With `payer`/`plan` it returns that payer's negotiated rate rows. Major payer families are matched under every spelling hospitals use (`blue cross` also finds BCBS / Blue Shield / Anthem; `uhc` also finds UnitedHealthcare; also Aetna, Cigna, Humana, Kaiser): each priced hospital carries `payer_match` (which spelling matched, which payer names it lists) and `searched` carries `payer_filter_normalised` and the aliases searched.
 - `hospital_price_compare(code, ccns[])` — the same fields side by side for up to 10 named hospitals (by CMS Certification Number).
 - `hospital_price_coverage(ccn? | name? | state?)` — whether the store holds a hospital's prices and, if not, why (blocked, no file found, unsupported version, ...).
 
@@ -77,7 +77,7 @@ directly, instead of just this one's:
 }
 ```
 
-Both URLs reach the same gateway and the same 1856+ data sources. The
+Both URLs reach the same gateway and the same 1858+ data sources. The
 only difference is which pack's tools are listed **directly**; `ask_pipeworx`
 reaches all of them from either one.
 
@@ -91,10 +91,12 @@ curl -X POST https://gateway.pipeworx.io/v1/tools/hospital_price_search \
 
 No account needed for the first calls. Inspect any tool: `GET https://gateway.pipeworx.io/v1/tools/hospital_price_search`. Find one: `POST https://gateway.pipeworx.io/v1/tools/search_packs` with `{"query":"..."}`.
 
-## Standalone (no gateway account)
+## Run it from npm
 
-This package also runs as a local stdio MCP server — no Pipeworx account, no
-gateway round-trip:
+`@pipeworx/mcp-hospital-prices` is a local stdio bridge to the Pipeworx gateway: your MCP client
+starts it with `npx`, and it forwards every call to the same
+`https://gateway.pipeworx.io/hospital-prices/mcp` endpoint shown above. It needs network access;
+there is no offline mode.
 
 ```json
 {
@@ -107,15 +109,18 @@ gateway round-trip:
 }
 ```
 
-Or run it directly to confirm it starts:
+Without a key it calls anonymously, capped at 50 calls a day. A free account
+raises that to 200 a day: get a key at https://pipeworx.io/signup and add
+`"env": { "PIPEWORX_API_KEY": "<your key>" }` to the server entry.
+The key is sent as a Bearer token, the same way a hosted connection sends it,
+so calls are metered and billed exactly as they are there.
 
-```bash
-npx -y @pipeworx/mcp-hospital-prices
-```
+It lists **only** this pack's tools by default. Set `PIPEWORX_META_TOOLS=1` to
+also list `ask_pipeworx` and the other gateway-wide tools.
 
-It speaks MCP over stdin/stdout and answers `initialize`/`tools/list`/`tools/call`
-for **only** this pack's tools — none of the shared meta-tools the gateway
-connection above adds. Same source, same tools, no ask_pipeworx routing.
+Behind an HTTPS proxy: Node's built-in `fetch` does not read `HTTPS_PROXY` by
+default. Newer Node releases honour it when `NODE_USE_ENV_PROXY=1` is set; check
+your Node version's documentation.
 
 ## Using with ask_pipeworx
 
