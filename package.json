@@ -1,6 +1,6 @@
 {
   "name": "@pipeworx/mcp-hospital-prices",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "hospital-prices -- what US hospitals charge for a service: gross charge, self-pay price and payer-negotiated rates near a ZIP, from the standard charges files hospitals publish under the CMS price transparency rule (45 CFR 180).",
   "type": "module",
   "main": "lib/index.js",
@@ -27,7 +27,7 @@
     "mode": "gateway",
     "slug": "hospital-prices",
     "gatewaySlug": "hospital-prices",
-    "sourceHash": "v1-9fc386e99a7f8bc8cb4b890e0dfb9aec5e81e2f285318b66e5e1c86af0df2b47",
-    "sourceCommit": "305e2cd138cb71158e9c1e664ea0e6739bd40801"
+    "sourceHash": "v1-e75a25aa333c9cc052b53294af3cc7ca03aa6aa7349d197f17899c56de757bf0",
+    "sourceCommit": "0ca9712c0ac03bb0121cc7e81b202d0c45ac02ca"
   }
 }

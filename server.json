@@ -3,7 +3,7 @@
   "name": "io.github.pipeworx-io/hospital-prices",
   "title": "Hospital Prices",
   "description": "hospital-prices -- what US hospitals charge for a service: gross charge, self-pay price and…",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "websiteUrl": "https://pipeworx.io/packs/hospital-prices",
   "repository": {
     "url": "https://github.com/pipeworx-io/mcp-hospital-prices",
